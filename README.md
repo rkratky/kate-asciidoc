@@ -1,5 +1,5 @@
 # kate-asciidoc
-AsciiDoc syntax-highlighting definition for Katepart, originally by Wilhelm Meier.
+AsciiDoc syntax-highlighting definition for Katepart, originally by Vitali Baumtrok/Wilhelm Meier.
 
 ## Resources
 
