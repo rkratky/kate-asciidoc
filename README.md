@@ -1,5 +1,10 @@
 # kate-asciidoc
+
 AsciiDoc syntax-highlighting definition for Katepart, originally by Vitali Baumtrok/Wilhelm Meier.
+
+## Usage
+
+Place the `asciidoc.xml` file into the `~/.local/share/katepart5/syntax/` directory and restart Kate/KWrite.
 
 ## Resources
 
