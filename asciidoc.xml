@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language SYSTEM "language.dtd">
+
+<!--
+	Syntax highlighting for AsciiDoc and AsciiDoc Pre Processor
+	Copyright (C) 2014 Wilhelm Meier <wilhelm.meier@fh-kl.de>.
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<language
+	name="AsciiDoc"
+	version="0.1"
+	kateversion="2.1"
+	section="Markup"
+	priority="1"
+	extensions="*.asciidoc;*.adoc;*.ad;*.ad.txt;*.adoc.txt"
+	mimetype="text/x-asciidoc"
+	author="Vitali Baumtrok (vbit@mailbox.org)">
+
+
+<!--
+	Installation:
+	Copy this file in directory "/usr/share/kde4/apps/katepart/syntax" or
+	similar and Kate should recognize it automatically. You can select
+	the highlighting in "Tools > Highlighting > Markup".
+-->
+
+<highlighting>
+
+	<!-- this is not used -->
+	<list name="keyToDo">
+		<item> TODO </item>
+		<item> FIXME </item>
+		<item> CHECK </item>
+		<item> TEST </item>
+		<item> XXX </item>
+		<item> ZZZ </item>
+		<item> DEPRECATED </item>
+	</list>
+
+
+	<contexts>
+
+		<context name="ctxBlock" attribute="stlPlain" lineEndContext="#stay" fallthrough="TRUE" fallthroughContext="ctxSection">
+			<IncludeRules context="ctxToSection"/>
+			<IncludeRules context="ctxToBlock"/>
+		</context>
+
+		<context name="ctxSection" attribute="stlPlain" lineEndContext="#stay">
+			<!-- excluding plain text -->
+			<IncludeRules context="ctxToSection"/>
+			<!-- section title -->
+			<RegExpr attribute="stlSectionTitle0" context="ctxBlock" String="^=*\s*$"/>
+			<RegExpr attribute="stlSectionTitle1" context="ctxBlock" String="^-*\s*$"/>
+			<RegExpr attribute="stlSectionTitle2" context="ctxBlock" String="^~*\s*$"/>
+			<RegExpr attribute="stlSectionTitle3" context="ctxBlock" String="^\^*\s*$"/>
+			<RegExpr attribute="stlSectionTitle4" context="ctxBlock" String="^\+*\s*$"/>
+			<!-- neutral rules -->
+			<IncludeRules context="ctxToBlock"/>
+			<!-- plain text -->
+			<IncludeRules context="ctxInlineFormat"/>
+		</context>
+
+		<context name="ctxToSection" attribute="stlPlain" lineEndContext="#stay">
+			<!-- plain text -->
+			<RegExpr attribute="stlPlain" context="ctxSection" String="^\.\s.*$"/>
+			<RegExpr attribute="stlPlain" context="ctxSection" String="^\*[^*].*$"/>
+			<RegExpr attribute="stlPlain" context="ctxSection" String="^-[^-].*$"/>
+			<RegExpr attribute="stlPlain" context="ctxSection" String="^~[^~].*$"/>
+			<RegExpr attribute="stlPlain" context="ctxSection" String="^\^[^\^].*$"/>
+			<RegExpr attribute="stlPlain" context="ctxSection" String="^\+[^\+].*$"/>
+			<RegExpr attribute="stlPlain" context="ctxSection" String="^:\s.*$"/>
+		</context>
+
+		<context name="ctxToBlock" attribute="stlPlain" lineEndContext="#stay">
+			<!-- one line section title -->
+			<RegExpr attribute="stlSectionTitle0" context="ctxBlock" String="^=\s+\S.*$"/>
+			<RegExpr attribute="stlSectionTitle1" context="ctxBlock" String="^==\s+\S.*$"/>
+			<RegExpr attribute="stlSectionTitle2" context="ctxBlock" String="^===\s+\S.*$"/>
+			<RegExpr attribute="stlSectionTitle3" context="ctxBlock" String="^====\s+\S.*$"/>
+			<RegExpr attribute="stlSectionTitle4" context="ctxBlock" String="^=====\s+\S.*$"/>
+			<!-- one line comment -->
+			<RegExpr attribute="stlComment" context="ctxBlock" String="^///*(\s+\S|[^/\s]).*|\s+///*.*$"/>
+			<!-- block -->
+			<RegExpr attribute="stlBlockId" context="ctxBlockId" String="^\[\["/>
+			<RegExpr attribute="stlBlockTitle" context="ctxBlock" String="^\.[a-zA-Z0-9_].*$"/>
+			<!-- attribute entry -->
+			<RegExpr attribute="stlAttribute" context="ctxAttribute" String="^:[a-zA-Z_]"/>
+			<RegExpr attribute="stlAttribute" context="ctxAttributeInSquareBrackets" String="^\["/>
+			<!-- delimited blocks -->
+			<IncludeRules context="ctxDelimitedBlock"/>
+		</context>
+
+		<context name="ctxDelimitedBlock" attribute="stlPlain" lineEndContext="ctxBlock">
+			<RegExpr attribute="stlOpenBlock" context="ctxOpenBlock" String="^--$"/>
+			<RegExpr attribute="stlCommentBlock" context="ctxCommentBlock" String="^///*\s*$"/>
+			<RegExpr attribute="stlPassthroughBlock" context="ctxPassthroughBlock" String="^\++\s*$"/>
+			<RegExpr attribute="stlListingBlock" context="ctxListingBlock" String="^-+\s*$"/>
+			<RegExpr attribute="stlLiteralBlock" context="ctxLiteralBlock" String="^\.+\s*$"/>
+			<RegExpr attribute="stlSidebarBlock" context="ctxSidebarBlock" String="^\*+\s*$"/>
+			<RegExpr attribute="stlQuoteBlock" context="ctxQuoteBlock" String="^_+\s*$"/>
+			<RegExpr attribute="stlExampleBlock" context="ctxExampleBlock" String="^=+\s*$"/>
+			<RegExpr attribute="stlTable" context="ctxTable" String="^\|=+\s*$"/>
+		</context>
+
+		<context name="ctxInlineFormat" attribute="stlPlain" lineEndContext="#pop">
+			<RegExpr attribute="stlQuoteEmphasizedUnconstrained" context="ctxQuoteEmphasizedUnconstrained" String="__[^_]"/>
+			<RegExpr attribute="stlQuoteStrongUnconstrained" context="ctxQuoteStrongUnconstrained" String="\*\*[^\*]"/>
+			<RegExpr attribute="stlQuoteMonospacedUnconstrained" context="ctxQuoteMonospacedUnconstrained" String="\+\+[^\+]"/>
+			<RegExpr attribute="stlQuoteUnquotedUnconstrained" context="ctxQuoteUnquotedUnconstrained" String="##[^#]"/>
+			<RegExpr attribute="stlQuoteDouble" context="ctxQuoteDouble" String="``[^`]"/>
+			<RangeDetect attribute="stlQuoteEmphasized" char="'" char1="'"/>
+			<RangeDetect attribute="stlQuoteEmphasized" char="_" char1="_"/>
+			<RangeDetect attribute="stlQuoteStrong" char="*" char1="*"/>
+			<RangeDetect attribute="stlQuoteMonospaced" char="+" char1="+"/>
+			<RangeDetect attribute="stlQuoteMonospaced" char="`" char1="`"/>
+			<RangeDetect attribute="stlQuoteUnquoted" char="#" char1="#"/>
+			<RangeDetect attribute="stlQuoteSingle" char="`" char1="'"/>
+		</context>
+
+
+		<context name="ctxBlockId" attribute="stlBlockId" lineEndContext="ctxBlock">
+			<RegExpr attribute="stlBlockId" context="ctxInlineFormat" String="\]\]"/>
+		</context>
+
+		<context name="ctxAttribute" attribute="stlAttribute" lineEndContext="ctxBlock">
+			<DetectChar attribute="stlAttribute" context="ctxInlineFormat" char=":"/>
+		</context>
+		<context name="ctxAttributeInSquareBrackets" attribute="stlAttribute" lineEndContext="ctxBlock">
+			<RegExpr attribute="stlAttribute" context="ctxInlineFormat" String="\]"/>
+		</context>
+
+		<context name="ctxCommentBlock" attribute="stlCommentBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlCommentBlock" context="ctxBlock" String="^//+\s*$"/>
+		</context>
+		<context name="ctxPassthroughBlock" attribute="stlPassthroughBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlPassthroughBlock" context="ctxBlock" String="^\+\++\s*$"/>
+		</context>
+		<context name="ctxListingBlock" attribute="stlListingBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlListingBlock" context="ctxBlock" String="^--+\s*$"/>
+		</context>
+		<context name="ctxLiteralBlock" attribute="stlLiteralBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlLiteralBlock" context="ctxBlock" String="^\.\.+\s*$"/>
+		</context>
+		<context name="ctxSidebarBlock" attribute="stlSidebarBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlSidebarBlock" context="ctxBlock" String="^\*\*+\s*$"/>
+		</context>
+		<context name="ctxQuoteBlock" attribute="stlQuoteBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlQuoteBlock" context="ctxBlock" String="^__+\s*$"/>
+		</context>
+		<context name="ctxExampleBlock" attribute="stlExampleBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlExampleBlock" context="ctxBlock" String="^==+\s*$"/>
+		</context>
+		<context name="ctxOpenBlock" attribute="stlOpenBlock" lineEndContext="#stay">
+			<RegExpr attribute="stlOpenBlock" context="ctxBlock" String="^--+$"/>
+		</context>
+		<context name="ctxTable" attribute="stlTable" lineEndContext="#stay">
+			<RegExpr attribute="stlTable" context="ctxBlock" String="^\|=+\s*$"/>
+		</context>
+
+		<context name="ctxQuoteEmphasizedUnconstrained" attribute="stlQuoteEmphasizedUnconstrained" lineEndContext="#stay">
+			<RegExpr attribute="stlQuoteEmphasizedUnconstrained" context="#pop" String="[^_]__"/>
+		</context>
+		<context name="ctxQuoteStrongUnconstrained" attribute="stlQuoteStrongUnconstrained" lineEndContext="#stay">
+			<RegExpr attribute="stlQuoteStrongUnconstrained" context="#pop" String="[^\*]\*\*"/>
+		</context>
+		<context name="ctxQuoteMonospacedUnconstrained" attribute="stlQuoteMonospacedUnconstrained" lineEndContext="#stay">
+			<RegExpr attribute="stlQuoteMonospacedUnconstrained" context="#pop" String="[^\+]\+\+"/>
+		</context>
+		<context name="ctxQuoteUnquotedUnconstrained" attribute="stlQuoteUnquotedUnconstrained" lineEndContext="#stay">
+			<RegExpr attribute="stlQuoteUnquotedUnconstrained" context="#pop" String="[^#]##"/>
+		</context>
+		<context name="ctxQuoteDouble" attribute="stlQuoteDouble" lineEndContext="#stay">
+			<RegExpr attribute="stlQuoteDouble" context="#pop" String="[^']''"/>
+		</context>
+
+		<!-- (not used) -->
+		<context name="ctxTest" attribute="stlTest" lineEndContext="#stay">
+		</context>
+
+		<context name="emailCtx" attribute="StringStyle" lineEndContext="#stay">
+			<DetectChar attribute="StringStyle" context="#pop" char="&quot;"/>
+		</context>
+
+	</contexts>
+
+
+	<itemDatas>
+		<!-- general -->
+		<itemData name="stlPlain" defStyleNum="dsNormal"/>
+		<itemData name="stlAttribute" defStyleNum="dsKeyword"/>
+		<itemData name="stlComment" defStyleNum="dsComment"/>
+		<itemData name="stlString" defStyleNum="dsString"/>
+		<!-- block -->
+		<itemData name="stlBlockId" defStyleNum="dsFunction"/>
+		<itemData name="stlCommentBlock" defStyleNum="dsComment"/>
+		<itemData name="stlPassthroughBlock" defStyleNum="dsOthers"/>
+		<itemData name="stlListingBlock" defStyleNum="dsOthers"/>
+		<itemData name="stlLiteralBlock" defStyleNum="dsOthers"/>
+		<itemData name="stlSidebarBlock" defStyleNum="dsOthers"/>
+		<itemData name="stlQuoteBlock" defStyleNum="dsOthers"/>
+		<itemData name="stlExampleBlock" defStyleNum="dsOthers"/>
+		<itemData name="stlOpenBlock" defStyleNum="dsOthers"/>
+		<itemData name="stlTable" defStyleNum="dsChar"/>
+		<!-- title -->
+		<itemData name="stlBlockTitle" defStyleNum="dsDecVal"/>
+		<itemData name="stlSectionTitle0" defStyleNum="dsDataType" bold="TRUE"/>
+		<itemData name="stlSectionTitle1" defStyleNum="dsDataType" bold="TRUE"/>
+		<itemData name="stlSectionTitle2" defStyleNum="dsDataType"/>
+		<itemData name="stlSectionTitle3" defStyleNum="dsDataType"/>
+		<itemData name="stlSectionTitle4" defStyleNum="dsDataType"/>
+		<!-- quote -->
+		<itemData name="stlQuoteEmphasizedUnconstrained" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteStrongUnconstrained" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteMonospacedUnconstrained" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteUnquotedUnconstrained" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteEmphasized" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteStrong" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteMonospaced" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteUnquoted" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteSingle" defStyleNum="dsNormal" italic="TRUE"/>
+		<itemData name="stlQuoteDouble" defStyleNum="dsNormal" italic="TRUE"/>
+		<!-- other -->
+		<itemData name="stlTest" defStyleNum="dsNormal" color="#0f0"/>
+		<itemData name="EmailStyle" defStyleNum="dsKeyword" spellChecking="FALSE"/>
+	</itemDatas>
+
+
+</highlighting>
+
+<general>
+  <comments>
+    <comment name="singleLine" start="//" />
+    <comment name="multiLine" start="/*" end="*/" />
+  </comments>
+  <keywords casesensitive="1" />
+</general>
+
+
+</language>
